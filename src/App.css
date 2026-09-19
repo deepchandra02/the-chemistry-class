@@ -1,0 +1,352 @@
+.landing {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  overflow: hidden;
+
+  /* Soft teal/violet glow behind the hero */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(560px circle at 45% 38%, rgba(94, 234, 212, 0.13), transparent 70%),
+      radial-gradient(520px circle at 60% 55%, rgba(167, 139, 250, 0.11), transparent 70%);
+  }
+
+  /* Faint lab-paper grid that fades out towards the edges */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center;
+    mask-image: radial-gradient(ellipse at 50% 42%, #000 5%, transparent 62%);
+  }
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px 0;
+  text-align: center;
+
+  & > * {
+    animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  & > :nth-child(2) {
+    animation-delay: 0.12s;
+  }
+  & > :nth-child(3) {
+    animation-delay: 0.24s;
+  }
+  & > :nth-child(4) {
+    animation-delay: 0.36s;
+  }
+  & > :nth-child(5) {
+    animation-delay: 0.48s;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 7vw, 64px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: var(--text-h);
+  }
+
+  p {
+    max-width: 32rem;
+    margin: 0;
+    font-size: clamp(16px, 2.2vw, 19px);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.14em;
+}
+
+/* Nine tiles are ~13.7em wide, so cap the row's size by viewport width */
+.chemistry {
+  display: flex;
+  align-items: center;
+  gap: 0.08em;
+  font-size: min(1em, 6vw);
+}
+
+/* Periodic-table tile, tinted along the teal -> violet gradient by position */
+.element {
+  --c: color-mix(in oklab, var(--teal), var(--violet) calc(var(--i) * 100% / 8));
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.45em;
+  height: 1.45em;
+  border: 1px solid color-mix(in oklab, var(--c) 45%, transparent);
+  border-radius: 0.1em;
+  background: color-mix(in oklab, var(--c) 8%, transparent);
+  box-shadow: 0 0 0.5em color-mix(in oklab, var(--c) 14%, transparent);
+  color: var(--c);
+  transition: translate 0.25s ease, box-shadow 0.25s ease;
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(0.35s + var(--i) * 0.07s);
+
+  &:hover {
+    translate: 0 -0.06em;
+    box-shadow: 0 0 0.7em color-mix(in oklab, var(--c) 30%, transparent);
+  }
+
+  .symbol {
+    font-size: 0.9em;
+  }
+
+  /* Only each symbol's first letter spells the word */
+  .faded {
+    opacity: 0.04;
+  }
+
+  .number,
+  .name {
+    position: absolute;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    opacity: 0.75;
+  }
+
+  .number {
+    top: 0.5em;
+    left: 0.6em;
+    font-size: clamp(7px, 0.15em, 12px);
+  }
+
+  .name {
+    bottom: 0.6em;
+    inset-inline: 0;
+    font-size: clamp(6px, 0.11em, 10px);
+    text-transform: uppercase;
+  }
+
+  /* Tiles are too small on phones for the number and name to clear the symbol */
+  @media (max-width: 640px) {
+    .number,
+    .name {
+      display: none;
+    }
+  }
+}
+
+.atom {
+  width: 168px;
+  height: 168px;
+  margin-bottom: 8px;
+  overflow: visible;
+  animation:
+    rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    spin 60s linear infinite;
+
+  .orbit {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1;
+  }
+
+  .electron {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.55));
+  }
+
+  .nucleus {
+    transform-box: fill-box;
+    transform-origin: center;
+    filter: drop-shadow(0 0 14px rgba(94, 234, 212, 0.7));
+    animation: pulse 3s ease-in-out infinite;
+  }
+}
+
+/* One drop every 0.75s; the flask reaches its endpoint once per 6s cycle */
+.titration {
+  width: 72px;
+  height: auto;
+  overflow: visible;
+
+  .glass {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+  }
+
+  .stopcock {
+    fill: rgba(255, 255, 255, 0.18);
+  }
+
+  .titrant {
+    fill: rgba(94, 234, 212, 0.35);
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: drain 6s linear infinite;
+  }
+
+  .drop {
+    fill: var(--teal);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: drip 0.75s ease-in infinite;
+  }
+
+  .flask {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: swirl 1.5s ease-in-out infinite alternate;
+  }
+
+  .solution {
+    fill: rgba(94, 234, 212, 0.16);
+    animation: endpoint 6s ease-in-out infinite;
+  }
+
+  .ripple {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 0.8;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ripple 0.75s ease-out infinite;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-h);
+}
+
+.footer {
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes drip {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.3);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(40px) scale(1);
+  }
+  71%,
+  100% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+@keyframes ripple {
+  0%,
+  70% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  74% {
+    opacity: 1;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes drain {
+  92% {
+    transform: scaleY(0.55);
+  }
+}
+
+@keyframes endpoint {
+  50% {
+    fill: rgba(94, 234, 212, 0.16);
+  }
+  75%,
+  92% {
+    fill: rgba(244, 114, 182, 0.6);
+    translate: 0 -3px;
+  }
+}
+
+@keyframes swirl {
+  from {
+    rotate: -3deg;
+  }
+  to {
+    rotate: 3deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+}
